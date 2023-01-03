@@ -57,6 +57,7 @@ export default function App() {
     let locationPermission = await getPermissions();
     if (locationPermission !== "granted") return;
     getCurrentLocation();
+    reverseGeocode();
   }
 
   async function allowLocationPermission() {
@@ -72,9 +73,6 @@ export default function App() {
 
   useEffect(() => {
     getPermissionAndCurrentLocation();
-    // getPermissions();
-    // getCurrentLocation();
-    // console.log('effect loc',location)
   }, [locationPermissionButton]);
 
   const geocode = async () => {
@@ -84,13 +82,23 @@ export default function App() {
   };
 
   const reverseGeocode = async () => {
-    const reverseGeocodedAddress = await Location.reverseGeocodeAsync({
-      longitude: location.coords.longitude,
-      latitude: location.coords.latitude,
-    });
+    try {
+      const reverseGeocodedAddress = await Location.reverseGeocodeAsync({
+        longitude: location.coords.longitude,
+        latitude: location.coords.latitude,
+      });
 
-    console.log("Address:");
-    console.log(reverseGeocodedAddress);
+      console.log("Address:");
+      console.log(reverseGeocodedAddress);
+      console.log(reverseGeocodedAddress[0].street);
+      console.log(reverseGeocodedAddress[0].district);
+      console.log(reverseGeocodedAddress[0].subregion);
+      console.log(reverseGeocodedAddress[0].city);
+      console.log(reverseGeocodedAddress[0].region);
+      console.log(reverseGeocodedAddress[0].isoCountryCode);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return locationPermissionButton ? (
